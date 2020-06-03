@@ -1,9 +1,6 @@
 package hex.tree;
 
 import hex.*;
-
-import static hex.genmodel.GenModel.createAuxKey;
-
 import hex.genmodel.CategoricalEncoding;
 import hex.genmodel.algos.tree.SharedTreeMojoModel;
 import hex.genmodel.algos.tree.SharedTreeNode;
@@ -23,6 +20,9 @@ import water.util.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
+import static hex.genmodel.GenModel.createAuxKey;
 
 public abstract class SharedTreeModel<
         M extends SharedTreeModel<M, P, O>,
@@ -173,6 +173,21 @@ public abstract class SharedTreeModel<
       _scored_train = new ScoreKeeper[]{new ScoreKeeper(Double.NaN)};
       _scored_valid = new ScoreKeeper[]{new ScoreKeeper(Double.NaN)};
       _modelClassDist = _priorClassDist;
+    }
+
+    @Override
+    public TwoDimTable createInputFramesInformationTable(ModelBuilder modelBuilder) {
+      SharedTreeParameters params = (SharedTreeParameters) modelBuilder._parms;
+      TwoDimTable table = super.createInputFramesInformationTable(modelBuilder);
+      table.set(2, 0, "calibration_frame");
+      table.set(2, 1, params.getCalibrationFrame() != null ? params.getCalibrationFrame().checksum() : -1);
+      table.set(2, 2, params.getCalibrationFrame() != null ? Arrays.toString(params.getCalibrationFrame().anyVec().espc()) : -1);
+      return table;
+    }
+
+    @Override
+    public int getInformationTableNumRows() {
+      return super.getInformationTableNumRows() + 1;
     }
 
     // Append next set of K trees
