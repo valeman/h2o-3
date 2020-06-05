@@ -85,7 +85,7 @@ public class AstTfIdfTest extends TestUtil {
 
             for(int i = 0; i < expectedOutputFrame.numCols(); i++) {
                 Vec expectedVec = expectedOutputFrame.vec(i);
-
+                Scope.track(expectedVec);
                 if (expectedVec.get_type() == Vec.T_STR)
                     assertStringVecEquals(expectedVec, resFrame.vec(i));
                 else
