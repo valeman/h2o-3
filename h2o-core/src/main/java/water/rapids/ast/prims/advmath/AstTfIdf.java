@@ -89,12 +89,16 @@ public class AstTfIdf extends AstPrimitive<AstTfIdf> {
                                                    + inputFrameColsCnt);
             
             Vec docIdVec = inputFrame.vec(docIdIdx);
+            Scope.track(docIdVec);
             Vec contentVec = inputFrame.vec(contentIdx);
+            Scope.track(contentVec);
             
             if (!docIdVec.isNumeric() || !contentVec.isString())
                 throw new IllegalArgumentException("Incorrect format of input frame." +
                                                    "Following row format is expected: (numeric) documentID, (string) "
-                                                   + (preprocess ? "documentContent." : "words."));
+                                                   + (preprocess ? "documentContent." : "words. " +
+                                                   "Got "+docIdVec.get_type_str() + " and " + contentVec.get_type_str() 
+                                                   +" instead."));
 
             // Case sensitivity
             if (!caseSensitive)
@@ -115,6 +119,7 @@ public class AstTfIdf extends AstPrimitive<AstTfIdf> {
                 String countDocumentsRapid = "(unique (cols " + asts[1].toString() + " [" + docIdIdx + "]))";
                 documentsCnt = Rapids.exec(countDocumentsRapid).getFrame().anyVec().length();
             }
+            Scope.track(wordFrame);
 
             // TF
             Frame tfOutFrame = TermFrequencyTask.compute(wordFrame);
@@ -127,6 +132,7 @@ public class AstTfIdf extends AstPrimitive<AstTfIdf> {
             // IDF
             InverseDocumentFrequencyTask idf = new InverseDocumentFrequencyTask(documentsCnt);
             Vec idfValues = idf.doAll(new byte[]{ Vec.T_NUM }, dfOutFrame.lastVec()).outputFrame().anyVec();
+            Scope.track(idfValues);
             // Replace DF column with IDF column
             dfOutFrame.remove(dfOutFrame.numCols() - 1);
             dfOutFrame.add(IDF_COL_NAME, idfValues);
