@@ -6,7 +6,7 @@ from h2o.information_retrieval.tf_idf import tf_idf
 def tf_idf_small_data(preprocess, case_sens, cols=[0, 1]):
     input_fr = get_simple_input_test_frame() if preprocess else get_simple_preprocessed_input_test_frame()
     expected_fr = get_expected_output_frame_case_sens() if case_sens else get_expected_output_frame_case_insens()
-    out_frame = tf_idf(input_fr, *cols, preprocess, case_sens)
+    out_frame = tf_idf(input_fr, cols[0], cols[1], preprocess, case_sens)
 
     assert out_frame == expected_fr
 

@@ -52,7 +52,7 @@ public class AstTfIdf extends AstPrimitive<AstTfIdf> {
     /**
      * Column names to be used for preprocessed frame.
      */
-    private static final String[] PREPROCESSED_FRAME_COL_NAMES = new String[] { "DocID", "Word" };
+    private static final String[] PREPROCESSED_FRAME_COL_NAMES = new String[] { "DocID", "Words" };
     /**
      * Class logger.
      */
@@ -94,7 +94,7 @@ public class AstTfIdf extends AstPrimitive<AstTfIdf> {
             if (!docIdVec.isNumeric() || !contentVec.isString())
                 throw new IllegalArgumentException("Incorrect format of input frame." +
                                                    "Following row format is expected: (numeric) documentID, (string) "
-                                                   + (preprocess ? "documentContent." : "word."));
+                                                   + (preprocess ? "documentContent." : "words."));
 
             // Case sensitivity
             if (!caseSensitive)
