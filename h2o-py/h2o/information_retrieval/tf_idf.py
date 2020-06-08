@@ -25,7 +25,7 @@ def tf_idf(frame, document_id_col, text_col, preprocess=True, case_sensitive=Tru
     """
     input_type = type(frame)
     if input_type is not H2OFrame:
-        raise ValueError(f"TF-IDF cannot be computed for input of type '{input_type}'. H2OFrame input is required.")
+        raise ValueError("TF-IDF cannot be computed for input of type"+input_type+". H2OFrame input is required.")
     
     col_indices = []
     for col in [document_id_col, text_col]:
@@ -36,7 +36,7 @@ def tf_idf(frame, document_id_col, text_col, preprocess=True, case_sensitive=Tru
         elif col_type is str:
             col_indices.append(frame.names.index(col))
         else:
-            raise ValueError(f"Invalid type to specify a column ('{col_type}'). Name or index of a column is required.")
+            raise ValueError("Invalid type to specify a column ("+col_type+"). Name or index of a column is required.")
 
     tf_idf_frame = H2OFrame._expr(ExprNode("tf-idf", frame, *col_indices, preprocess, case_sensitive))
 
