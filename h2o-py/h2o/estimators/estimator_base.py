@@ -194,6 +194,10 @@ class H2OEstimator(ModelBase):
         model_builder_json = h2o.api("POST /%d/ModelBuilders/%s" % (rest_ver, self.algo), data=parms)
         job = H2OJob(model_builder_json, job_type=(self.algo + " Model Build"))
 
+        for mesg in model_builder_json["messages"]:
+            if mesg["message_type"] == "WARN":
+                warnings.warn(mesg["message"], RuntimeWarning)
+
         if self._future:
             self._job = job
             self._rest_version = rest_ver
