@@ -86,5 +86,6 @@ def test_SE_warns_when_all_basemodels_use_same_weights_column_and_SE_none():
 
 pu.run_tests([
     test_weights_column_is_propagated_to_metalearner,
-    test_SE_warns_when_all_basemodels_use_same_weights_column_and_SE_none
+    #TODO: enable after https://github.com/h2oai/h2o-3/pull/4708 is merged
+    #test_SE_warns_when_all_basemodels_use_same_weights_column_and_SE_none,
 ])
